@@ -10,11 +10,13 @@ function init() {
     const cellCount = width * width
 
     // * Game variables
-    let pikaPosition = 0 // Start in the first cell by default
+    let pikaPosition = 1 // Start in the first cell by default
     let currentDirection = 0 // This will store the direction last pressed based on the keyCode
 
     let currentLength = 1
-    let berryPosition = 10
+    let berryPosition = 4
+
+    let berriesEaten = 1 // This effectively is the size of the snake
 
     // This will do something when a specific key is pressed -> event.keyCode
     // Every key on the keyboard has a specific code
@@ -35,7 +37,9 @@ function init() {
     }
 
     createGrid(pikaPosition) // Generate the grid
-    cells[berryPosition].classList.add('berry')
+
+    // KEEP THIS TO USE LATER BUT NO BERRIES FOR NOW
+    // cells[berryPosition].classList.add('berry')
 
 
     function updatePosition() { // This function determines which is the position to fill in next
@@ -62,6 +66,45 @@ function init() {
 
     }
 
+    let snakeArray = []
+        // This will contain the indeces of the cells where the snake is
+    let snakeLength = 4 // This is the starting size of the snake, fixed for now
+    let renderArray = []
+    let removeArray = []
+
+
+    function updateSnake() { // Based on the latest pika position, should update the snake array
+
+        // Prepare the snake array and render at each of the cells
+
+
+        // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
+        snakeArray.push(pikaPosition)
+
+        // But then only render the last X cells according to the supposed snake size
+
+        renderArray = snakeArray.slice(-snakeLength)
+
+        // Then we'll iterate through only those to render pika
+        for (x of snakeArray) {
+            if (renderArray.includes(x)) {
+                cells[x].classList.add('pika')
+            } else {
+                cells[x].classList.remove('pika')
+            }
+
+
+
+        }
+        // Remove pika from all previous cells
+        // removeArray = snakeArray.slice(snakeLength)
+
+        // for (x of removeArray) {
+        //     cells[x].classList.remove('pika')
+        // }
+    }
+
+
 
     function randomBerries() {
         cells[berryPosition].classList.remove('berry')
@@ -83,17 +126,35 @@ function init() {
         if (currentDirection !== 0 && pikaPosition >= 0) {
             cells[pikaPosition].classList.remove('pika')
             updatePosition()
-            console.log(pikaPosition)
-            cells[pikaPosition].classList.add('pika')
+
+            updateSnake()
+
+
+
+
+            // // KEEP THIS BUT USE LATER WHEN INTRODUCING BERRIES
+            // if (pikaPosition == berryPosition) {
+            //     cells[berryPosition].classList.remove('berry')
+            //     cells[pikaPosition].classList.add('pika')
+
+            // } else {
+            //     cells[pikaPosition].classList.add('pika')
+            //}
+
+
+
+
         }
 
     }, 1000)
 
+
     // Every X seconds move the berry elsewhere
-    const berryTimer = setInterval(() => {
-        if (currentDirection !== 0 && pikaPosition >= 0)
-            randomBerries()
-    }, 3000)
+    // KEEP BUT DISABLE FOR NOW
+    // const berryTimer = setInterval(() => {
+    //     if (currentDirection !== 0 && pikaPosition >= 0)
+    //         randomBerries()
+    // }, 3000)
 
 
 
