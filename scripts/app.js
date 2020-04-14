@@ -111,25 +111,25 @@ function init() {
 
 
     // THIS WORKS BUT JUST RESTRUCTURING THIS DIFFERENTLY
-    function randomBerries() {
-        let berryCheck = []
-        for (cell of cells) { // Check every single cell
+    // function randomBerries() {
+    //     let berryCheck = []
+    //     for (cell of cells) { // Check every single cell
 
-            // Append the TRUE/FALSE check as 1/0
-            berryCheck.push(cell.classList.contains('berry') * 1)
-                // Sum the array to find out if there are any berries there (greater than 0)
-            const numberOfBerries = berryCheck.reduce(add)
-            console.log('number berries', numberOfBerries)
+    //         // Append the TRUE/FALSE check as 1/0
+    //         berryCheck.push(cell.classList.contains('berry') * 1)
+    //             // Sum the array to find out if there are any berries there (greater than 0)
+    //         const numberOfBerries = berryCheck.reduce(add)
+    //         console.log('number berries', numberOfBerries)
 
-            // if there is no berry at all
-            if (numberOfBerries == 0) {
-                // Go and drop a berry somewhere random
-                berryPosition = Math.floor(Math.random() * cellCount)
-                cells[berryPosition].classList.add('berry')
-            }
-        }
+    //         // if there is no berry at all
+    //         if (numberOfBerries == 0) {
+    //             // Go and drop a berry somewhere random
+    //             berryPosition = Math.floor(Math.random() * cellCount)
+    //             cells[berryPosition].classList.add('berry')
+    //         }
+    //     }
 
-    }
+
 
 
     function fillIn(event) {
@@ -141,12 +141,26 @@ function init() {
     // Every second that passes executes the function again
     // This does NOT depend on the event but is controlled by the direction
 
+    let numberOfBerries = 0
+
+    // Start the timer 
+    const berryTimer = setInterval(() => {
+        if (numberOfBerries == 0 && currentDirection !== 0 && pikaPosition >= 0) { // If there's no berry displayed, start the timer 
+            // Go and drop a berry somewhere random
+            cells[berryPosition].classList.remove('berry')
+            berryPosition = Math.floor(Math.random() * cellCount)
+            cells[berryPosition].classList.add('berry')
+        }
+    }, 3000)
+
+
     const timerId = setInterval(() => { // Start the timer
         if (currentDirection !== 0 && pikaPosition >= 0) {
             cells[pikaPosition].classList.remove('pika')
             updatePosition()
             eatBerries()
             updateSnake()
+            numberOfBerries = checkBerries()
 
         }
 
@@ -155,10 +169,36 @@ function init() {
 
     // Every X seconds move the berry elsewhere
     // KEEP BUT DISABLE FOR NOW
-    const berryTimer = setInterval(() => {
-        if (currentDirection !== 0 && pikaPosition >= 0)
-            randomBerries()
-    }, 10000)
+
+
+
+    function checkBerries() {
+        console.log('checkBerries executed')
+
+        let berryCheck = []
+            // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
+        for (cell of cells) { // Check every single cell
+
+            // Append the TRUE/FALSE check as 1/0
+            berryCheck.push(cell.classList.contains('berry') * 1)
+
+        }
+
+        // Sum the array to find out if there are any berries there (greater than 0)
+        const numberOfBerries = berryCheck.reduce(add)
+        console.log('number berries', numberOfBerries)
+
+        return numberOfBerries
+    }
+
+
+
+
+
+
+
+
+
 
 
 
