@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable indent */
 function init() {
+
     // * DOM Elements
     const grid = document.querySelector('.grid')
     const cells = []
@@ -13,10 +14,10 @@ function init() {
     let pikaPosition = 1 // Start in the first cell by default
     let currentDirection = 0 // This will store the direction last pressed based on the keyCode
 
-    let currentLength = 1
     let berryPosition = 4
+        // This is the starting size of the snake
+    let snakeLength = 4
 
-    let berriesEaten = 1 // This effectively is the size of the snake
 
     // This will do something when a specific key is pressed -> event.keyCode
     // Every key on the keyboard has a specific code
@@ -33,49 +34,45 @@ function init() {
             grid.appendChild(cell)
             cells.push(cell)
         }
-        cells[startingPosition].classList.add('pika') // Put pika in the first cell
+
+        // Put pika in the first cell
+        cells[startingPosition].classList.add('pika')
     }
+    // Generate the grid
+    createGrid(pikaPosition)
 
-    createGrid(pikaPosition) // Generate the grid
-
-
+    // Put initial berry on grid
     cells[berryPosition].classList.add('berry')
 
+    // This function determines which is the position to fill in next
+    function updatePosition() {
 
-    function updatePosition() { // This function determines which is the position to fill in next
-
+        // These are the boundaries of the grid      
         const x = pikaPosition % width // if the remainder of modulus is greater than zero then it's gone beyond the width
         const y = Math.floor(pikaPosition / width) // if the 
 
         if (currentDirection == 39 && x < width - 1) {
             pikaPosition++
-            console.log('last pressed right', pikaPosition)
         } else if (currentDirection == 37 && x > 0) {
             pikaPosition--
-            console.log('last pressed left', pikaPosition)
         } else if (currentDirection == 38 && y > 0) {
             pikaPosition -= width
-            console.log('last pressed up', pikaPosition)
         } else if (currentDirection == 40 && y < width - 1) {
             pikaPosition += width
-            console.log('last pressed left', pikaPosition)
         } else {
             pikaPosition = -1
-            console.log('invalid')
         }
 
     }
-
+    // This will contain the indices of all the cells where the snake has been to
     let snakeArray = []
-        // This will contain the indeces of the cells where the snake has been to
 
-    let snakeLength = 4 // This is the starting size of the snake, fixed for now
-
-    let renderArray = [] //This is the latest position of the snake to be rendered
+    //This is the latest position of the snake to be rendered
+    let renderArray = []
 
 
-
-    function updateSnake() { // Based on the latest pika position, should update the snake array
+    // Based on the latest pika position, should update the snake array
+    function updateSnake() {
 
         // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
         snakeArray.push(pikaPosition)
@@ -95,83 +92,20 @@ function init() {
         }
     }
 
+    // When the snake eats a berry, increase its size
     function eatBerries() {
         if (pikaPosition == berryPosition) {
             cells[berryPosition].classList.remove('berry')
-            berriesEaten++
             snakeLength++ // Increase the snake length by 1
         }
-
-
-
     }
 
+    // Prep for checkBerries
+    let numberOfBerries = 0
     const add = (a, b) => a + b
 
 
-
-    // THIS WORKS BUT JUST RESTRUCTURING THIS DIFFERENTLY
-    // function randomBerries() {
-    //     let berryCheck = []
-    //     for (cell of cells) { // Check every single cell
-
-    //         // Append the TRUE/FALSE check as 1/0
-    //         berryCheck.push(cell.classList.contains('berry') * 1)
-    //             // Sum the array to find out if there are any berries there (greater than 0)
-    //         const numberOfBerries = berryCheck.reduce(add)
-    //         console.log('number berries', numberOfBerries)
-
-    //         // if there is no berry at all
-    //         if (numberOfBerries == 0) {
-    //             // Go and drop a berry somewhere random
-    //             berryPosition = Math.floor(Math.random() * cellCount)
-    //             cells[berryPosition].classList.add('berry')
-    //         }
-    //     }
-
-
-
-
-    function fillIn(event) {
-
-        currentDirection = event.keyCode
-    }
-
-
-    // Every second that passes executes the function again
-    // This does NOT depend on the event but is controlled by the direction
-
-    let numberOfBerries = 0
-
-    // Start the timer 
-    const berryTimer = setInterval(() => {
-        if (numberOfBerries == 0 && currentDirection !== 0 && pikaPosition >= 0) { // If there's no berry displayed, start the timer 
-            // Go and drop a berry somewhere random
-            cells[berryPosition].classList.remove('berry')
-            berryPosition = Math.floor(Math.random() * cellCount)
-            cells[berryPosition].classList.add('berry')
-        }
-    }, 3000)
-
-
-    const timerId = setInterval(() => { // Start the timer
-        if (currentDirection !== 0 && pikaPosition >= 0) {
-            cells[pikaPosition].classList.remove('pika')
-            updatePosition()
-            eatBerries()
-            updateSnake()
-            numberOfBerries = checkBerries()
-
-        }
-
-    }, 1000)
-
-
-    // Every X seconds move the berry elsewhere
-    // KEEP BUT DISABLE FOR NOW
-
-
-
+    // Every time, check whether there are any berries on the grid
     function checkBerries() {
         console.log('checkBerries executed')
 
@@ -184,7 +118,7 @@ function init() {
 
         }
 
-        // Sum the array to find out if there are any berries there (greater than 0)
+        // Sum the array to find out if there are any berries
         const numberOfBerries = berryCheck.reduce(add)
         console.log('number berries', numberOfBerries)
 
@@ -194,19 +128,43 @@ function init() {
 
 
 
+    function moveSnake(event) {
+        currentDirection = event.keyCode
+    }
 
 
+    // Every second that passes executes the function again
+    // This does NOT depend on the event but is controlled by the direction
+
+    // Start the timer 
+    const berryTimer = setInterval(() => {
+        if (numberOfBerries == 0 && currentDirection !== 0 && pikaPosition >= 0) { // If there's no berry displayed, start the timer 
+            // Go and drop a berry somewhere random
+            cells[berryPosition].classList.remove('berry')
+            berryPosition = Math.floor(Math.random() * cellCount)
+            cells[berryPosition].classList.add('berry')
+        }
+    }, 300)
 
 
+    const timerId = setInterval(() => { // Start the timer
+        if (currentDirection !== 0 && pikaPosition >= 0) {
+            cells[pikaPosition].classList.remove('pika')
+            updatePosition()
+            eatBerries()
+            updateSnake()
+            numberOfBerries = checkBerries()
 
+        }
 
+    }, 100)
 
 
     // * Event listeners
 
     // This is how we listen to the keyboard
     // Whenever there's a click, start the timer 
-    document.addEventListener('keyup', fillIn)
+    document.addEventListener('keyup', moveSnake)
 
 }
 
