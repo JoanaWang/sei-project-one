@@ -38,8 +38,8 @@ function init() {
 
     createGrid(pikaPosition) // Generate the grid
 
-    // KEEP THIS TO USE LATER BUT NO BERRIES FOR NOW
-    // cells[berryPosition].classList.add('berry')
+
+    cells[berryPosition].classList.add('berry')
 
 
     function updatePosition() { // This function determines which is the position to fill in next
@@ -67,16 +67,15 @@ function init() {
     }
 
     let snakeArray = []
-        // This will contain the indeces of the cells where the snake is
+        // This will contain the indeces of the cells where the snake has been to
+
     let snakeLength = 4 // This is the starting size of the snake, fixed for now
-    let renderArray = []
-    let removeArray = []
+
+    let renderArray = [] //This is the latest position of the snake to be rendered
+
 
 
     function updateSnake() { // Based on the latest pika position, should update the snake array
-
-        // Prepare the snake array and render at each of the cells
-
 
         // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
         snakeArray.push(pikaPosition)
@@ -93,23 +92,43 @@ function init() {
                 cells[x].classList.remove('pika')
             }
 
-
-
         }
-        // Remove pika from all previous cells
-        // removeArray = snakeArray.slice(snakeLength)
-
-        // for (x of removeArray) {
-        //     cells[x].classList.remove('pika')
-        // }
     }
 
+    function eatBerries() {
+        if (pikaPosition == berryPosition) {
+            cells[berryPosition].classList.remove('berry')
+            berriesEaten++
+            snakeLength++ // Increase the snake length by 1
+        }
 
 
+
+    }
+
+    const add = (a, b) => a + b
+
+
+
+    // THIS WORKS BUT JUST RESTRUCTURING THIS DIFFERENTLY
     function randomBerries() {
-        cells[berryPosition].classList.remove('berry')
-        berryPosition = Math.floor(Math.random() * cellCount)
-        cells[berryPosition].classList.add('berry')
+        let berryCheck = []
+        for (cell of cells) { // Check every single cell
+
+            // Append the TRUE/FALSE check as 1/0
+            berryCheck.push(cell.classList.contains('berry') * 1)
+                // Sum the array to find out if there are any berries there (greater than 0)
+            const numberOfBerries = berryCheck.reduce(add)
+            console.log('number berries', numberOfBerries)
+
+            // if there is no berry at all
+            if (numberOfBerries == 0) {
+                // Go and drop a berry somewhere random
+                berryPosition = Math.floor(Math.random() * cellCount)
+                cells[berryPosition].classList.add('berry')
+            }
+        }
+
     }
 
 
@@ -126,23 +145,8 @@ function init() {
         if (currentDirection !== 0 && pikaPosition >= 0) {
             cells[pikaPosition].classList.remove('pika')
             updatePosition()
-
+            eatBerries()
             updateSnake()
-
-
-
-
-            // // KEEP THIS BUT USE LATER WHEN INTRODUCING BERRIES
-            // if (pikaPosition == berryPosition) {
-            //     cells[berryPosition].classList.remove('berry')
-            //     cells[pikaPosition].classList.add('pika')
-
-            // } else {
-            //     cells[pikaPosition].classList.add('pika')
-            //}
-
-
-
 
         }
 
@@ -151,10 +155,10 @@ function init() {
 
     // Every X seconds move the berry elsewhere
     // KEEP BUT DISABLE FOR NOW
-    // const berryTimer = setInterval(() => {
-    //     if (currentDirection !== 0 && pikaPosition >= 0)
-    //         randomBerries()
-    // }, 3000)
+    const berryTimer = setInterval(() => {
+        if (currentDirection !== 0 && pikaPosition >= 0)
+            randomBerries()
+    }, 10000)
 
 
 
