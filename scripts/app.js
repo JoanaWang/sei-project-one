@@ -136,15 +136,28 @@ function init() {
     // Every second that passes executes the function again
     // This does NOT depend on the event but is controlled by the direction
 
+    let freeArray = []
+
     // Start the timer 
     const berryTimer = setInterval(() => {
         if (numberOfBerries == 0 && currentDirection !== 0 && pikaPosition >= 0) { // If there's no berry displayed, start the timer 
             // Go and drop a berry somewhere random
             cells[berryPosition].classList.remove('berry')
-            berryPosition = Math.floor(Math.random() * cellCount)
+
+            // Before randomly dropping a berry need to check which cells are free
+
+            for (i = 0; i < cellCount; i++) { // for each of the original cells
+                if (!renderArray.includes(i)) { //check if that cell has NOT been taken by the snake
+                    freeArray.push(i) // if it's free, then add it to freeArray
+                }
+            }
+
+            //From the cells that are free, pick one randomly
+            berryPosition = freeArray[Math.floor(Math.random() * freeArray.length)]
+                //Put the berry there
             cells[berryPosition].classList.add('berry')
         }
-    }, 300)
+    }, 800)
 
 
     const timerId = setInterval(() => { // Start the timer
@@ -157,7 +170,7 @@ function init() {
 
         }
 
-    }, 100)
+    }, 500)
 
 
     // * Event listeners
