@@ -13,6 +13,7 @@ function init() {
     // * Game variables
     let pikaPosition = 1 // Start in the first cell by default
     let currentDirection = 0 // This will store the direction last pressed based on the keyCode
+    let previousDirection = 0 // This will store the direction before the one just pressed so we don't allow it to go back where it came
 
     let berryPosition = 4
         // This is the starting size of the snake
@@ -44,6 +45,28 @@ function init() {
     // Put initial berry on grid
     cells[berryPosition].classList.add('berry')
 
+    function updateDirection(event) {
+
+        // Update based on event
+
+        previousDirection = currentDirection
+        currentDirection = event.keyCode
+
+        // Depending on combination of events figure out final direction to take
+
+        if (previousDirection == 39 && currentDirection == 37) { //was going right and decided to go left, still go right
+            currentDirection = 39
+        } else if (previousDirection == 37 && currentDirection == 39) { //was going left and decided to go right, still go left
+            currentDirection = 37
+        } else if (previousDirection == 38 && currentDirection == 40) { //was going up and decided to go down, still go up
+            currentDirection = 38
+        } else if (previousDirection == 40 && currentDirection == 38) { //was going down and decided to go up, still go down
+            currentDirection = 40
+        }
+
+    }
+
+
     // This function determines which is the position to fill in next
     function updatePosition() {
 
@@ -51,19 +74,23 @@ function init() {
         const x = pikaPosition % width // if the remainder of modulus is greater than zero then it's gone beyond the width
         const y = Math.floor(pikaPosition / width) // if the 
 
-        if (currentDirection == 39 && x < width - 1) {
+        if (currentDirection == 39 && x < width - 1) { // Going right
             pikaPosition++
-        } else if (currentDirection == 37 && x > 0) {
+        } else if (currentDirection == 37 && x > 0) { // Going left
             pikaPosition--
-        } else if (currentDirection == 38 && y > 0) {
+        } else if (currentDirection == 38 && y > 0) { // Going up
             pikaPosition -= width
-        } else if (currentDirection == 40 && y < width - 1) {
+        } else if (currentDirection == 40 && y < width - 1) { // Going down
             pikaPosition += width
+
         } else {
+            alert('You\'ve gone outside the board!')
             pikaPosition = -1
         }
 
     }
+
+
     // This will contain the indices of all the cells where the snake has been to
     let snakeArray = []
 
@@ -128,9 +155,13 @@ function init() {
 
 
 
-    function moveSnake(event) {
-        currentDirection = event.keyCode
-    }
+
+
+
+    // function moveSnake(event) {
+    //     previousDirection = currentDirection
+    //     currentDirection = event.keyCode
+    // }
 
 
     // Every second that passes executes the function again
@@ -177,7 +208,7 @@ function init() {
 
     // This is how we listen to the keyboard
     // Whenever there's a click, start the timer 
-    document.addEventListener('keyup', moveSnake)
+    document.addEventListener('keyup', updateDirection)
 
 }
 
