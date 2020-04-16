@@ -18,6 +18,7 @@ function init() {
     let berryPosition = 47
         // This is the starting size of the snake
     let snakeLength = 4
+    let berriesEaten = 0
 
 
     // This will contain the indices of all the cells where the snake has been to
@@ -98,7 +99,6 @@ function init() {
         const x = pikaPosition % width // if the remainder of modulus is greater than zero then it's gone beyond the width
         const y = Math.floor(pikaPosition / width) // if the 
 
-        console.log('Pika Position', pikaPosition)
 
         if (currentDirection == 39 && x < width - 1 && !renderArray.includes(pikaPosition + 1)) { // Going 
             pikaPosition++
@@ -124,6 +124,7 @@ function init() {
         if (pikaPosition == berryPosition) {
             cells[berryPosition].classList.remove('berry')
             snakeLength++ // Increase the snake length by 1
+            berriesEaten++
         }
     }
 
@@ -156,13 +157,11 @@ function init() {
     function updateSnake() {
 
         // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
-        console.log('pika position inside updateSnake', pikaPosition)
+
         snakeArray.push(pikaPosition)
-        console.log('snakeArray', snakeArray)
             // But then only render the last X cells according to the supposed snake size
 
         renderArray = snakeArray.slice(-snakeLength)
-        console.log('RenderArray', renderArray)
 
         // Then we'll iterate through only those to render pika
         for (x of snakeArray) {
@@ -184,10 +183,24 @@ function init() {
     // }
 
 
+    // Check which cells are free
+    function checkFree(renderArray) {
+        let freeArray = []
+
+        for (i = 0; i < cellCount; i++) { // for each of the original cells
+            if (!renderArray.includes(i)) { //check if that cell has NOT been taken by the snake
+                freeArray.push(i) // if it's free, then add it to freeArray
+            }
+
+        }
+        return freeArray
+    }
+
+
+
     // Every second that passes executes the function again
     // This does NOT depend on the event but is controlled by the direction
 
-    let freeArray = []
 
     // Start the timer 
     const berryTimer = setInterval(() => {
@@ -197,11 +210,7 @@ function init() {
 
             // Before randomly dropping a berry need to check which cells are free
 
-            for (i = 0; i < cellCount; i++) { // for each of the original cells
-                if (!renderArray.includes(i)) { //check if that cell has NOT been taken by the snake
-                    freeArray.push(i) // if it's free, then add it to freeArray
-                }
-            }
+            const freeArray = checkFree(renderArray)
 
             //From the cells that are free, pick one randomly
             berryPosition = freeArray[Math.floor(Math.random() * freeArray.length)]
@@ -215,12 +224,12 @@ function init() {
         if (currentDirection !== 0 && pikaPosition >= 0) {
             cells[pikaPosition].classList.remove('pika')
             updatePosition()
-            console.log('after update Position', pikaPosition)
             eatBerries()
             updateSnake()
-            console.log('after updateSnake', pikaPosition)
-
             numberOfBerries = checkBerries()
+            if (checkFree(renderArray).length == 0) {
+                alert('You WIN!!!')
+            }
 
         }
 
