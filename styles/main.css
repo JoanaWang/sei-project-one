@@ -3,41 +3,61 @@
 }
 
 body {
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     margin: 0;
 }
 
 .grid-wrapper {
     height: 100vh;
+    padding: 600px 200px 1000px 200px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: top;
+    /* background-image: url('../assets/3310.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center; */
+    position: relative;
+    z-index: 1;
 }
 
 .grid {
-    align-items: center;
+    align-items: top;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
     display: flex;
     flex-wrap: wrap;
-    height: 100%;
     justify-content: center;
-    height: 600px;
-    width: 600px;
+    height: 180px;
+    width: 280px;
+    background-color: #588A53;
+    border: 1px dotted #140A00;
 }
 
 .grid div {
-    border: 1px solid lightgrey;
+    /* border: 0.5px solid grey; */
     flex-grow: 1;
     height: 10%;
     width: 10%;
 }
 
 .grid div.pika {
-    background-image: url('../assets/pika-sprite.png');
+    /* background-image: url('../assets/snake-body-square.png'); */
     background-repeat: no-repeat;
     background-size: contain;
+    background-color: #140A00;
     cursor: pointer;
+    border: 0.01px solid #588A53;
 }
+
+
+/* .grid div.pika {
+    background-color: #140A00;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 0.01px solid #588A53;
+    cursor: pointer;
+} */
 
 .grid div.berry {
     background-image: url('../assets/berry.png');
@@ -45,3 +65,30 @@ body {
     background-size: contain;
     cursor: pointer;
 }
+
+.phone {
+    padding: 600px 200px 1000px 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/3310.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    position: absolute;
+    z-index: 3;
+    top: 1px;
+    left: 760px;
+}
+
+
+/* .phone {
+    background-image: url('../assets/phone.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
