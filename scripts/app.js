@@ -8,13 +8,14 @@ function init() {
     const cells = []
     const score = document.querySelector('#score')
     const end = document.querySelector('.game-over')
-
+    const snakeHeadCell = document.querySelector('.snakeHead')
 
     score.textContent = '00'
 
     // * Grid variables
-    const width = 10
-    const cellCount = width * width
+    const width = 20
+    const height = 10
+    const cellCount = width * height
 
     // * Game variables
     let pikaPosition = 44 // Start in the first cell by default
@@ -55,6 +56,7 @@ function init() {
         for (x of snakeArray) {
             cells[x].classList.add('pika')
         }
+        cells[snakeArray.slice(-1)].classList.add('snakeHead')
 
 
     }
@@ -172,12 +174,40 @@ function init() {
 
         renderArray = snakeArray.slice(-snakeLength)
 
-        // Then we'll iterate through only those to render pika
+
+        let headAngle = 0
+            // Then we'll iterate through only those to render pika
         for (x of snakeArray) {
             if (renderArray.includes(x)) {
-                cells[x].classList.add('pika')
+                if (renderArray.indexOf(x) == renderArray.length - 1) {
+                    cells[x].classList.remove('pika')
+
+                    // switch (currentDirection) {
+                    //     case 37:
+                    //         headAngle = 0
+                    //         break
+                    //     case 39:
+                    //         headAngle = 90
+                    //         break
+                    //     case 38:
+                    //         headAngle = 180
+                    //         break
+                    //     case 40:
+                    //         headAngle = 270
+                    //         break
+                    // }
+
+                    // snakeHeadCell.setAttribute('style', 'rotate: ' & headAngle)
+                    // console.log('rotate: ' & headAngle)
+                    cells[x].classList.add('snakeHead')
+                } else {
+                    cells[x].classList.remove('snakeHead')
+                    cells[x].classList.add('pika')
+                }
+
             } else {
                 cells[x].classList.remove('pika')
+                cells[x].classList.remove('snakeHead')
             }
 
         }
@@ -231,7 +261,6 @@ function init() {
 
     const timerId = setInterval(() => { // Start the timer
         if (currentDirection !== 0 && pikaPosition >= 0) {
-            cells[pikaPosition].classList.remove('pika')
             updatePosition()
             eatBerries()
             updateSnake()
