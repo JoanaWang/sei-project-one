@@ -6,6 +6,7 @@ body {
     height: 100%;
     width: 100%;
     margin: 0;
+    /* background-color: #140A00; */
 }
 
 .grid-wrapper {
@@ -18,20 +19,22 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center; */
-    position: relative;
+    position: absolute;
     z-index: 1;
+    top: 0px;
+    left: 635px;
 }
 
 .grid {
     align-items: top;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2); */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    height: 180px;
-    width: 280px;
-    background-color: #588A53;
-    border: 1px dotted #140A00;
+    height: 150px;
+    width: 250px;
+    /* background-color: #588A53;*/
+    border: 1.5px dotted #140A00;
 }
 
 .grid div {
@@ -39,13 +42,15 @@ body {
     flex-grow: 1;
     height: 10%;
     width: 10%;
+    background-image: url('../assets/cell-green.png');
+    background-size: cover;
+    cursor: pointer;
 }
 
 .grid div.pika {
-    /* background-image: url('../assets/snake-body-square.png'); */
+    background-image: url('../assets/snake-body.png');
     background-repeat: no-repeat;
     background-size: contain;
-    background-color: #140A00;
     cursor: pointer;
     border: 0.01px solid #588A53;
 }
@@ -76,19 +81,50 @@ body {
     background-size: contain;
     background-position: center;
     position: absolute;
-    z-index: 3;
-    top: 1px;
+    z-index: 9;
+    top: -20px;
     left: 760px;
 }
 
-
-/* .phone {
-    background-image: url('../assets/phone.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    cursor: pointer;
-    height: 100vh;
+.green {
+    height: 300px;
+    width: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
-} */
+    position: absolute;
+    z-index: 1;
+    top: 500px;
+    left: 780px;
+    background-image: url('../assets/cell-green.png');
+    background-size: cover;
+    background-repeat: repeat;
+    cursor: pointer;
+}
+
+.header {
+    height: 50px;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 13;
+    top: 545px;
+    left: 835px;
+    border-bottom: 1.5px dotted #140A00;
+}
+
+@font-face {
+    font-family: myFont;
+    src: url('../assets/SUBWT___.ttf');
+}
+
+#score {
+    font-family: myFont;
+    font-size: 50;
+    position: absolute;
+    z-index: 20;
+    top: 575px;
+    left: 840px;
+}

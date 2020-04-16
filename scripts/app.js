@@ -5,6 +5,10 @@ function init() {
     // * DOM Elements
     const grid = document.querySelector('.grid')
     const cells = []
+    const score = document.querySelector('#score')
+
+
+    score.textContent = '00'
 
     // * Grid variables
     const width = 10
@@ -125,6 +129,7 @@ function init() {
             cells[berryPosition].classList.remove('berry')
             snakeLength++ // Increase the snake length by 1
             berriesEaten++
+            score.textContent = berriesEaten * 10
         }
     }
 
