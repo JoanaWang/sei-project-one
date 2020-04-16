@@ -4,8 +4,10 @@ function init() {
 
     // * DOM Elements
     const grid = document.querySelector('.grid')
+    const gridWrapper = document.querySelector('.grid-wrapper')
     const cells = []
     const score = document.querySelector('#score')
+    const end = document.querySelector('.game-over')
 
 
     score.textContent = '00'
@@ -114,7 +116,9 @@ function init() {
             pikaPosition += width
 
         } else {
-            alert('You\'ve gone outside the board!')
+            gridWrapper.setAttribute('style', 'z-index: 1')
+            end.setAttribute('style', 'z-index: 30')
+                // alert('You\'ve gone outside the board!')
             pikaPosition = -1
         }
 

@@ -20,7 +20,7 @@ body {
     background-size: contain;
     background-position: center; */
     position: absolute;
-    z-index: 1;
+    z-index: 10;
     top: 0px;
     left: 635px;
 }
@@ -55,15 +55,6 @@ body {
     border: 0.01px solid #588A53;
 }
 
-
-/* .grid div.pika {
-    background-color: #140A00;
-    background-repeat: no-repeat;
-    background-size: contain;
-    border: 0.01px solid #588A53;
-    cursor: pointer;
-} */
-
 .grid div.berry {
     background-image: url('../assets/berry.png');
     background-repeat: no-repeat;
@@ -81,7 +72,7 @@ body {
     background-size: contain;
     background-position: center;
     position: absolute;
-    z-index: 9;
+    z-index: 20;
     top: -20px;
     left: 760px;
 }
@@ -93,7 +84,7 @@ body {
     justify-content: center;
     align-items: center;
     position: absolute;
-    z-index: 1;
+    z-index: 5;
     top: 500px;
     left: 780px;
     background-image: url('../assets/cell-green.png');
@@ -109,7 +100,7 @@ body {
     justify-content: center;
     align-items: center;
     position: absolute;
-    z-index: 13;
+    z-index: 10;
     top: 545px;
     left: 835px;
     border-bottom: 1.5px dotted #140A00;
@@ -124,7 +115,36 @@ body {
     font-family: myFont;
     font-size: 50;
     position: absolute;
-    z-index: 20;
+    z-index: 11;
     top: 575px;
     left: 840px;
+}
+
+.game-over {
+    height: 150px;
+    width: 200px;
+    position: absolute;
+    z-index: 2;
+    top: 620px;
+    left: 860px;
+    background-image: url('../assets/game-over.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+}
+
+.hide {
+    height: 100vh;
+    padding: 600px 200px 1000px 200px;
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    /* background-image: url('../assets/3310.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center; */
+    position: absolute;
+    z-index: 1;
+    top: 0px;
+    left: 635px;
 }
