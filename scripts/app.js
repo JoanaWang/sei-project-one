@@ -8,7 +8,7 @@ function init() {
     const cells = []
     const score = document.querySelector('#score')
     const end = document.querySelector('.game-over')
-    const snakeHeadCell = document.querySelector('.snakeHead')
+
 
     score.textContent = '00'
 
@@ -88,11 +88,6 @@ function init() {
     }
 
 
-
-
-
-
-
     // Starts with the initial position
 
     //This is the latest position of the snake to be rendered
@@ -120,7 +115,7 @@ function init() {
         } else {
             gridWrapper.setAttribute('style', 'z-index: 1')
             end.setAttribute('style', 'z-index: 30')
-                // alert('You\'ve gone outside the board!')
+
             pikaPosition = -1
         }
 
@@ -175,30 +170,37 @@ function init() {
         renderArray = snakeArray.slice(-snakeLength)
 
 
+
+
+
+
         let headAngle = 0
-            // Then we'll iterate through only those to render pika
+        switch (currentDirection) {
+            case 37:
+                headAngle = 180
+                break
+            case 39:
+                headAngle = 0
+                break
+            case 38:
+                headAngle = 270
+                break
+            case 40:
+                headAngle = 90
+                break
+        }
+
+
+
+        // Then we'll iterate through only those to render pika
         for (x of snakeArray) {
             if (renderArray.includes(x)) {
                 if (renderArray.indexOf(x) == renderArray.length - 1) {
+
                     cells[x].classList.remove('pika')
 
-                    // switch (currentDirection) {
-                    //     case 37:
-                    //         headAngle = 0
-                    //         break
-                    //     case 39:
-                    //         headAngle = 90
-                    //         break
-                    //     case 38:
-                    //         headAngle = 180
-                    //         break
-                    //     case 40:
-                    //         headAngle = 270
-                    //         break
-                    // }
-
-                    // snakeHeadCell.setAttribute('style', 'rotate: ' & headAngle)
-                    // console.log('rotate: ' & headAngle)
+                    cells[x].setAttribute('style', 'transform: rotate(' + headAngle + 'deg)')
+                    console.log('rotate: ' & headAngle)
                     cells[x].classList.add('snakeHead')
                 } else {
                     cells[x].classList.remove('snakeHead')
@@ -208,6 +210,7 @@ function init() {
             } else {
                 cells[x].classList.remove('pika')
                 cells[x].classList.remove('snakeHead')
+                cells[x].setAttribute('style', 'transform: rotate(0deg)')
             }
 
         }
