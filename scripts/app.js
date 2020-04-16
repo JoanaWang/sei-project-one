@@ -11,14 +11,17 @@ function init() {
     const cellCount = width * width
 
     // * Game variables
-    let pikaPosition = 1 // Start in the first cell by default
+    let pikaPosition = 44 // Start in the first cell by default
     let currentDirection = 0 // This will store the direction last pressed based on the keyCode
     let previousDirection = 0 // This will store the direction before the one just pressed so we don't allow it to go back where it came
 
-    let berryPosition = 4
+    let berryPosition = 47
         // This is the starting size of the snake
     let snakeLength = 4
 
+
+    // This will contain the indices of all the cells where the snake has been to
+    let snakeArray = []
 
     // This will do something when a specific key is pressed -> event.keyCode
     // Every key on the keyboard has a specific code
@@ -36,8 +39,17 @@ function init() {
             cells.push(cell)
         }
 
-        // Put pika in the first cell
-        cells[startingPosition].classList.add('pika')
+        // This is the initial position of the snake depending on the initial size
+        for (i = snakeLength - 1; i >= 0; i--) {
+            snakeArray.push(pikaPosition - i)
+        }
+
+        // Put pika at starting position
+        for (x of snakeArray) {
+            cells[x].classList.add('pika')
+        }
+
+
     }
     // Generate the grid
     createGrid(pikaPosition)
@@ -67,6 +79,18 @@ function init() {
     }
 
 
+
+
+
+
+
+    // Starts with the initial position
+
+    //This is the latest position of the snake to be rendered
+    let renderArray = snakeArray.slice(-snakeLength)
+
+
+
     // This function determines which is the position to fill in next
     function updatePosition() {
 
@@ -74,13 +98,15 @@ function init() {
         const x = pikaPosition % width // if the remainder of modulus is greater than zero then it's gone beyond the width
         const y = Math.floor(pikaPosition / width) // if the 
 
-        if (currentDirection == 39 && x < width - 1) { // Going right
+        console.log('Pika Position', pikaPosition)
+
+        if (currentDirection == 39 && x < width - 1 && !renderArray.includes(pikaPosition + 1)) { // Going 
             pikaPosition++
-        } else if (currentDirection == 37 && x > 0) { // Going left
+        } else if (currentDirection == 37 && x > 0 && !renderArray.includes(pikaPosition - 1)) { // Going left 
             pikaPosition--
-        } else if (currentDirection == 38 && y > 0) { // Going up
+        } else if (currentDirection == 38 && y > 0 && !renderArray.includes(pikaPosition - width)) { // Going up 
             pikaPosition -= width
-        } else if (currentDirection == 40 && y < width - 1) { // Going down
+        } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(pikaPosition + width)) { // Going down 
             pikaPosition += width
 
         } else {
@@ -91,33 +117,7 @@ function init() {
     }
 
 
-    // This will contain the indices of all the cells where the snake has been to
-    let snakeArray = []
 
-    //This is the latest position of the snake to be rendered
-    let renderArray = []
-
-
-    // Based on the latest pika position, should update the snake array
-    function updateSnake() {
-
-        // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
-        snakeArray.push(pikaPosition)
-
-        // But then only render the last X cells according to the supposed snake size
-
-        renderArray = snakeArray.slice(-snakeLength)
-
-        // Then we'll iterate through only those to render pika
-        for (x of snakeArray) {
-            if (renderArray.includes(x)) {
-                cells[x].classList.add('pika')
-            } else {
-                cells[x].classList.remove('pika')
-            }
-
-        }
-    }
 
     // When the snake eats a berry, increase its size
     function eatBerries() {
@@ -134,7 +134,6 @@ function init() {
 
     // Every time, check whether there are any berries on the grid
     function checkBerries() {
-        console.log('checkBerries executed')
 
         let berryCheck = []
             // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
@@ -147,13 +146,34 @@ function init() {
 
         // Sum the array to find out if there are any berries
         const numberOfBerries = berryCheck.reduce(add)
-        console.log('number berries', numberOfBerries)
 
         return numberOfBerries
     }
 
 
 
+    // Based on the latest pika position, should update the snake array
+    function updateSnake() {
+
+        // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
+        console.log('pika position inside updateSnake', pikaPosition)
+        snakeArray.push(pikaPosition)
+        console.log('snakeArray', snakeArray)
+            // But then only render the last X cells according to the supposed snake size
+
+        renderArray = snakeArray.slice(-snakeLength)
+        console.log('RenderArray', renderArray)
+
+        // Then we'll iterate through only those to render pika
+        for (x of snakeArray) {
+            if (renderArray.includes(x)) {
+                cells[x].classList.add('pika')
+            } else {
+                cells[x].classList.remove('pika')
+            }
+
+        }
+    }
 
 
 
@@ -188,20 +208,23 @@ function init() {
                 //Put the berry there
             cells[berryPosition].classList.add('berry')
         }
-    }, 800)
+    }, 500)
 
 
     const timerId = setInterval(() => { // Start the timer
         if (currentDirection !== 0 && pikaPosition >= 0) {
             cells[pikaPosition].classList.remove('pika')
             updatePosition()
+            console.log('after update Position', pikaPosition)
             eatBerries()
             updateSnake()
+            console.log('after updateSnake', pikaPosition)
+
             numberOfBerries = checkBerries()
 
         }
 
-    }, 500)
+    }, 200)
 
 
     // * Event listeners
