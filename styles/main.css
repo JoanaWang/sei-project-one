@@ -6,7 +6,7 @@ body {
     height: 100%;
     width: 100%;
     margin: 0;
-    /* background-color: #140A00; */
+    background-color: #140A00;
 }
 
 .grid-wrapper {
@@ -124,16 +124,27 @@ body {
 }
 
 .game-over {
-    height: 150px;
-    width: 200px;
+    height: 130px;
+    width: 300px;
     position: absolute;
-    z-index: 2;
-    top: 620px;
-    left: 860px;
-    background-image: url('../assets/game-over.png');
-    background-repeat: no-repeat;
-    background-size: contain;
+    z-index: 1;
+    top: 610px;
+    left: 810px;
     cursor: pointer;
+    font-family: myFont;
+    font-size: 50;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    /* background-image: url('../assets/cell-green.png'); */
+}
+
+.game-over img {
+    height: 100px;
+    width: 200px;
+    padding: 0px;
 }
 
 .start {

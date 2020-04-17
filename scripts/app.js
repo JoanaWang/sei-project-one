@@ -119,6 +119,7 @@ function init() {
         } else {
             gridWrapper.setAttribute('style', 'z-index: 1')
             end.setAttribute('style', 'z-index: 30')
+            setTimeout(window.location.reload(), 3000)
 
             pikaPosition = -1
         }
