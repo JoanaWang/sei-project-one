@@ -44,8 +44,8 @@ function init() {
 
     // * Game variables
     let isPlaying = false // On/off switch for snake to move around
-    let pikaPosition = Math.floor(cellCount / 2) + 50 // Start in the middle of the grid by default, this is the position of the snake head
-    let berryPosition = pikaPosition + 5 // Place an initial berry close to the initial position
+    let snakePosition = Math.floor(cellCount / 2) + 50 // Start in the middle of the grid by default, this is the position of the snake head
+    let berryPosition = snakePosition + 5 // Place an initial berry close to the initial position
     let currentDirection = 39 // Store keyCode of last direction pressed
     let previousDirection = 0 // Store keyCode of before last direction pressed so we don't allow it to go back where it came from
     let snakeLength = 4 // Starting size of the snake
@@ -67,7 +67,7 @@ function init() {
 
         // This is the initial position of the snake depending on the initial size
         for (i = snakeLength - 1; i >= 0; i--) {
-            snakeArray.push(pikaPosition - i)
+            snakeArray.push(snakePosition - i)
         }
 
         // Render the snake at the initial position
@@ -75,7 +75,7 @@ function init() {
         renderArray = snakeArray.slice(-snakeLength)
 
         for (x of renderArray) {
-            cells[x].classList.add('pika')
+            cells[x].classList.add('snake')
         }
         cells[renderArray.slice(-1)].classList.add('snakeHead')
 
@@ -87,7 +87,7 @@ function init() {
     }
 
     // Generate the grid
-    createGrid(pikaPosition)
+    createGrid(snakePosition)
 
 
     // * Game functions
@@ -128,21 +128,21 @@ function init() {
     function updatePosition() {
 
         // These are the boundaries of the grid      
-        const x = pikaPosition % width
-        const y = Math.floor(pikaPosition / width)
+        const x = snakePosition % width
+        const y = Math.floor(snakePosition / width)
 
         // Move the position if it conforms to the following conditions:
         // 1) What is the direction it wants to go to next?
         // 2) Is it within the grid boundaries?
         // 3) Is that cell already taken by the snake (which is contained in renderArray)?
-        if (currentDirection == 39 && x < width - 1 && !renderArray.includes(pikaPosition + 1)) { // Go right
-            pikaPosition++
-        } else if (currentDirection == 37 && x > 0 && !renderArray.includes(pikaPosition - 1)) { // Go left 
-            pikaPosition--
-        } else if (currentDirection == 38 && y > 0 && !renderArray.includes(pikaPosition - width)) { // Go up 
-            pikaPosition -= width
-        } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(pikaPosition + width)) { // Go down 
-            pikaPosition += width
+        if (currentDirection == 39 && x < width - 1 && !renderArray.includes(snakePosition + 1)) { // Go right
+            snakePosition++
+        } else if (currentDirection == 37 && x > 0 && !renderArray.includes(snakePosition - 1)) { // Go left 
+            snakePosition--
+        } else if (currentDirection == 38 && y > 0 && !renderArray.includes(snakePosition - width)) { // Go up 
+            snakePosition -= width
+        } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(snakePosition + width)) { // Go down 
+            snakePosition += width
         } else { // Otherwise, end the game
 
             currentDirection = 0
@@ -162,7 +162,7 @@ function init() {
     function updateSnake() {
 
         // Every time the snake head moves, add that index to the snake array so that we keep the history of where it's been
-        snakeArray.push(pikaPosition)
+        snakeArray.push(snakePosition)
 
         // But then only render the last X cells according to the latest snake size
         renderArray = snakeArray.slice(-snakeLength)
@@ -188,15 +188,15 @@ function init() {
         for (x of snakeArray) { // Check everywhere that the snake has been to
             if (renderArray.includes(x)) { // If it's currently part of the snake
                 if (renderArray.indexOf(x) == renderArray.length - 1) { // If it's the head, i.e. the last cell in the array
-                    cells[x].classList.remove('pika') // Stop rendering the body
+                    cells[x].classList.remove('snake') // Stop rendering the body
                     cells[x].setAttribute('style', 'transform: rotate(' + headAngle + 'deg)') // Rotate the head
                     cells[x].classList.add('snakeHead') // Render the head after it's been rotated
                 } else { // Otherwise, for the remaining cells just render the body
                     cells[x].classList.remove('snakeHead')
-                    cells[x].classList.add('pika')
+                    cells[x].classList.add('snake')
                 }
             } else { // Otherwise, for all remaining locations stop rendering and rotate back to normal
-                cells[x].classList.remove('pika')
+                cells[x].classList.remove('snake')
                 cells[x].classList.remove('snakeHead')
                 cells[x].setAttribute('style', 'transform: rotate(0deg)')
             }
@@ -206,7 +206,7 @@ function init() {
 
     // When the snake eats a berry, increase its size
     function eatBerries() {
-        if (pikaPosition == berryPosition) {
+        if (snakePosition == berryPosition) {
             cells[berryPosition].classList.remove('berry') // Stop rendering the berry at that position
             snakeLength++ // Increase the snake length by 1
             berriesEaten++ // Increate the score by 1

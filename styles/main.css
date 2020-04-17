@@ -52,7 +52,7 @@ body {
 
 /* The cell containing the body of the snake */
 
-.grid div.pika {
+.grid div.snake {
     background-image: url('../assets/half-right.png');
     background-repeat: no-repeat;
     background-size: cover;
