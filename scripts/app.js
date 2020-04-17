@@ -14,6 +14,19 @@ function init() {
     // * JS functions
     const add = (a, b) => a + b
 
+
+    // This helps to check which cells are free
+    function checkFree(renderArray) {
+        let freeArray = []
+
+        for (i = 0; i < cellCount; i++) { // for each of the original cells
+            if (!renderArray.includes(i)) { //check if that cell has NOT been taken by the snake
+                freeArray.push(i) // if it's free, then add it to freeArray
+            }
+        }
+        return freeArray
+    }
+
     // * Grid variables
     const width = 20
     const height = 10
@@ -68,6 +81,14 @@ function init() {
 
 
     // * Game functions
+
+    // Upon starting the game when a key is pressed, hide the start splash screen and turn on isPlaying
+    function startSplash(event) {
+        // Upon starting the game, turn off the start splash screen
+        start.setAttribute('style', 'z-index: 1')
+        isPlaying = true
+    }
+
 
     // Store the direction to go based on the keys pressed
     function updateDirection(event) {
@@ -149,27 +170,22 @@ function init() {
                 break
         }
 
-        // Then iterate for the cells that contain the snake in order to render them
-        for (x of snakeArray) {
-            if (renderArray.includes(x)) {
-                if (renderArray.indexOf(x) == renderArray.length - 1) {
-
-                    cells[x].classList.remove('pika')
-
-                    cells[x].setAttribute('style', 'transform: rotate(' + headAngle + 'deg)')
-                    console.log('rotate: ' & headAngle)
-                    cells[x].classList.add('snakeHead')
-                } else {
+        // Then iterate through the cells that contain the snake in order to render them
+        for (x of snakeArray) { // Check everywhere that the snake has been to
+            if (renderArray.includes(x)) { // If it's currently part of the snake
+                if (renderArray.indexOf(x) == renderArray.length - 1) { // If it's the head, i.e. the last cell in the array
+                    cells[x].classList.remove('pika') // Stop rendering the body
+                    cells[x].setAttribute('style', 'transform: rotate(' + headAngle + 'deg)') // Rotate the head
+                    cells[x].classList.add('snakeHead') // Render the head after it's been rotated
+                } else { // Otherwise, for the remaining cells just render the body
                     cells[x].classList.remove('snakeHead')
                     cells[x].classList.add('pika')
                 }
-
-            } else {
+            } else { // Otherwise, for all remaining locations stop rendering and rotate back to normal
                 cells[x].classList.remove('pika')
                 cells[x].classList.remove('snakeHead')
                 cells[x].setAttribute('style', 'transform: rotate(0deg)')
             }
-
         }
     }
 
@@ -186,102 +202,67 @@ function init() {
     }
 
 
-    // The berries are dropped in randomly according to a timer, HOWEVER if a berry gets eaten within that interval, this will force 
+    // The berries are dropped in randomly
+    function randomBerries() {
 
+        // If there is a berry elsewhere already, remove it first
+        cells[berryPosition].classList.remove('berry')
+
+        // Before dropping a berry need to check which cells are free so that it doesn't get placed on the snake itself
+        const freeArray = checkFree(renderArray)
+
+        //From the cells that are free, pick one randomly
+        berryPosition = freeArray[Math.floor(Math.random() * freeArray.length)]
+
+        //Put the berry there
+        cells[berryPosition].classList.add('berry')
+    }
 
     // Every time, check whether there are any berries on the grid
+    // This is to force generating a new berry as soon as the existing one gets eaten
     function checkBerries() {
 
         let berryCheck = []
-            // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
+
+        // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
         for (cell of cells) { // Check every single cell
 
-            // Append the TRUE/FALSE check as 1/0
+            // Append the TRUE/FALSE result as 1/0
             berryCheck.push(cell.classList.contains('berry') * 1)
-
         }
 
-        // Sum the array to find out if there are any berries
+        // Sum the array to find out if there are any berries i.e. the sum is greater than 0
         return berryCheck.reduce(add)
     }
 
 
-
-
-
-
-
-    // Check which cells are free
-    function checkFree(renderArray) {
-        let freeArray = []
-
-        for (i = 0; i < cellCount; i++) { // for each of the original cells
-            if (!renderArray.includes(i)) { //check if that cell has NOT been taken by the snake
-                freeArray.push(i) // if it's free, then add it to freeArray
-            }
-
-        }
-        return freeArray
-    }
-
-
-
-    // Every second that passes executes the function again
-    // This does NOT depend on the event but is controlled by the direction
-
-
-    // Start the timer 
+    // Start the timer for berries
     const berryTimer = setInterval(() => {
-        if (checkBerries() == 0 && isPlaying == true) { // If there's no berry displayed, start the timer 
-            // Go and drop a berry somewhere random
-            cells[berryPosition].classList.remove('berry')
-
-            // Before randomly dropping a berry need to check which cells are free
-
-            const freeArray = checkFree(renderArray)
-
-            //From the cells that are free, pick one randomly
-            berryPosition = freeArray[Math.floor(Math.random() * freeArray.length)]
-                //Put the berry there
-            cells[berryPosition].classList.add('berry')
+        if (checkBerries() == 0 && isPlaying == true) { // If there's no berry displayed, force to re-drop berries randomly
+            randomBerries()
         }
-    }, 500)
+    }, 100)
 
-
-
-
-    const timerId = setInterval(() => { // Start the timer
-        if (isPlaying == true) {
-            updatePosition()
-            eatBerries()
-            updateSnake()
-            if (checkFree(renderArray).length == 0) {
+    // Start the timer for the snake
+    const timerId = setInterval(() => {
+        if (isPlaying == true) { // Once the user presses the first key
+            updatePosition() // Recalculate the snake's latest position
+            eatBerries() // Check if it has eaten any berry
+            updateSnake() // Update the snake based on eatBerries()
+            if (checkFree(renderArray).length == 0) { // If there are no empty cells left then it means the player has reached the end of the game
                 alert('You WIN!!!')
             }
-
         }
-
     }, 150)
-
-
-
-    function startSplash(event) {
-        // Upon starting the game, turn off the start splash screen
-        start.setAttribute('style', 'z-index: 1')
-        isPlaying = true
-    }
-
-
-
 
     // * Event listeners
 
-    // This is how we listen to the keyboard
-    // Whenever there's a click, start the timer 
+    // When a key is pressed, stop showing the start splash screen and start the game
     document.addEventListener('keydown', startSplash)
+
+    // Every time a key is pressed, update the direction of the snake based on the keyCode
     document.addEventListener('keyup', updateDirection)
 
 }
-
 
 window.addEventListener('DOMContentLoaded', init)
