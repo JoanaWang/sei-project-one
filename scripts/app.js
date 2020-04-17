@@ -2,6 +2,8 @@
 /* eslint-disable indent */
 function init() {
 
+
+
     // * DOM Elements
     const grid = document.querySelector('.grid')
     const gridWrapper = document.querySelector('.grid-wrapper')
@@ -9,6 +11,7 @@ function init() {
     const score = document.querySelector('#score')
     const end = document.querySelector('.game-over')
     const start = document.querySelector('.start')
+
 
     score.textContent = '00'
 
@@ -73,7 +76,7 @@ function init() {
 
 
         // Update based on event
-
+        document.getElementById('turn').play()
         previousDirection = currentDirection
         currentDirection = event.keyCode
 
@@ -119,6 +122,8 @@ function init() {
         } else {
             gridWrapper.setAttribute('style', 'z-index: 1')
             end.setAttribute('style', 'z-index: 30')
+            document.getElementById('end').play()
+            clearInterval(timerId)
             setTimeout(window.location.reload(), 3000)
 
             pikaPosition = -1
@@ -136,6 +141,7 @@ function init() {
             snakeLength++ // Increase the snake length by 1
             berriesEaten++
             score.textContent = berriesEaten * 10
+            document.getElementById('eat').play()
         }
     }
 
