@@ -9,6 +9,9 @@ body {
     background-color: #140A00;
 }
 
+
+/* Hold the grid of cells */
+
 .grid-wrapper {
     height: 100vh;
     padding: 600px 200px 1000px 200px;
@@ -21,20 +24,23 @@ body {
     left: 635px;
 }
 
+
+/* The whole grid of cells */
+
 .grid {
     align-items: top;
-    /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2); */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     height: 125px;
     width: 250px;
-    /* background-color: #588A53;*/
     border: 1.5px dotted #140A00;
 }
 
+
+/* Each individual cell in the grid */
+
 .grid div {
-    /* border: 0.5px solid grey; */
     flex-grow: 1;
     height: 10%;
     width: 5%;
@@ -43,12 +49,18 @@ body {
     cursor: pointer;
 }
 
+
+/* The cell containing the body of the snake */
+
 .grid div.pika {
     background-image: url('../assets/half-right.png');
     background-repeat: no-repeat;
     background-size: cover;
     cursor: pointer;
 }
+
+
+/* The cell containing the head of the snake */
 
 .grid div.snakeHead {
     background-image: url('../assets/head-middle.png');
@@ -58,12 +70,18 @@ body {
     ;
 }
 
+
+/* The cell containing the berry */
+
 .grid div.berry {
     background-image: url('../assets/berry.png');
     background-repeat: no-repeat;
     background-size: contain;
     cursor: pointer;
 }
+
+
+/* The phone cover image */
 
 .phone {
     padding: 600px 200px 1000px 200px;
@@ -79,6 +97,9 @@ body {
     top: -20px;
     left: 760px;
 }
+
+
+/* The green background to cover the edges between the phone cover and the grid */
 
 .green {
     height: 300px;
@@ -96,6 +117,9 @@ body {
     cursor: pointer;
 }
 
+
+/* The header that holds the score */
+
 .header {
     height: 50px;
     width: 250px;
@@ -109,10 +133,16 @@ body {
     border-bottom: 1.5px dotted #140A00;
 }
 
+
+/* Loading the pixelated font */
+
 @font-face {
     font-family: myFont;
     src: url('../assets/SUBWT___.ttf');
 }
+
+
+/* Show the score using the pixelated font */
 
 #score {
     font-family: myFont;
@@ -122,6 +152,9 @@ body {
     top: 575px;
     left: 840px;
 }
+
+
+/* End of the game splash screen */
 
 .game-over {
     height: 130px;
@@ -138,14 +171,19 @@ body {
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-    /* background-image: url('../assets/cell-green.png'); */
 }
+
+
+/* Sizing the image in the end splash screen */
 
 .game-over img {
     height: 100px;
     width: 200px;
     padding: 0px;
 }
+
+
+/* Start of the game splash screen */
 
 .start {
     height: 200px;
@@ -164,20 +202,4 @@ body {
     align-items: center;
     background-image: url('../assets/cell-green.png');
     padding: 20px 20px 20px 20px;
-}
-
-.hide {
-    height: 100vh;
-    padding: 600px 200px 1000px 200px;
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    /* background-image: url('../assets/3310.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center; */
-    position: absolute;
-    z-index: 1;
-    top: 0px;
-    left: 635px;
 }

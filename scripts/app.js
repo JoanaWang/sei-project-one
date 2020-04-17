@@ -3,17 +3,16 @@
 function init() {
 
 
-
     // * DOM Elements
-    const grid = document.querySelector('.grid')
     const gridWrapper = document.querySelector('.grid-wrapper')
+    const grid = document.querySelector('.grid')
     const cells = []
     const score = document.querySelector('#score')
     const end = document.querySelector('.game-over')
     const start = document.querySelector('.start')
 
-
-    score.textContent = '00'
+    // * JS functions
+    const add = (a, b) => a + b
 
     // * Grid variables
     const width = 20
@@ -21,27 +20,20 @@ function init() {
     const cellCount = width * height
 
     // * Game variables
-    let pikaPosition = 44 // Start in the first cell by default
-    let currentDirection = 0 // This will store the direction last pressed based on the keyCode
-    let previousDirection = 0 // This will store the direction before the one just pressed so we don't allow it to go back where it came
+    let isPlaying = false // On/off switch for snake to move around
+    let pikaPosition = Math.floor(cellCount / 2) + 50 // Start in the middle of the grid by default, this is the position of the snake head
+    let berryPosition = pikaPosition + 5 // Place an initial berry close to the initial position
+    let currentDirection = 39 // Store keyCode of last direction pressed
+    let previousDirection = 0 // Store keyCode of before last direction pressed so we don't allow it to go back where it came from
+    let snakeLength = 4 // Starting size of the snake
+    let berriesEaten = 0 // Initial score
+    let snakeArray = [] // Store the indices of all the cells where the snake has been to
+    let renderArray = [] //This is the latest position of the snake to be rendered
 
-    let berryPosition = 47
-        // This is the starting size of the snake
-    let snakeLength = 4
-    let berriesEaten = 0
 
+    // * Prepare initial play
 
-    // This will contain the indices of all the cells where the snake has been to
-    let snakeArray = []
-
-    // This will do something when a specific key is pressed -> event.keyCode
-    // Every key on the keyboard has a specific code
-    // 38 up
-    // 40 down
-    // 37 left
-    // 39 right
-
-    // This will create the grid to start with 
+    // Create the grid and place snake and berry on grid
     function createGrid(startingPosition) {
         for (let i = 0; i < cellCount; i++) {
             const cell = document.createElement('div')
@@ -55,136 +47,92 @@ function init() {
             snakeArray.push(pikaPosition - i)
         }
 
-        // Put pika at starting position
-        for (x of snakeArray) {
+        // Render the snake at the initial position
+
+        renderArray = snakeArray.slice(-snakeLength)
+
+        for (x of renderArray) {
             cells[x].classList.add('pika')
         }
-        cells[snakeArray.slice(-1)].classList.add('snakeHead')
+        cells[renderArray.slice(-1)].classList.add('snakeHead')
 
+        // Put initial berry on grid
+        cells[berryPosition].classList.add('berry')
 
+        // Set initial score
+        score.textContent = berriesEaten
     }
+
     // Generate the grid
     createGrid(pikaPosition)
 
-    // Put initial berry on grid
-    cells[berryPosition].classList.add('berry')
 
+    // * Game functions
 
-
+    // Store the direction to go based on the keys pressed
     function updateDirection(event) {
 
-
-
-        // Update based on event
+        // Play sound every time key is pressed
         document.getElementById('turn').play()
+
+        // Store the last 2 directions pressed
         previousDirection = currentDirection
         currentDirection = event.keyCode
 
         // Depending on combination of events figure out final direction to take
-
-        if (previousDirection == 39 && currentDirection == 37) { //was going right and decided to go left, still go right
+        if (previousDirection == 39 && currentDirection == 37) { //was going right and pressed left, still go right
             currentDirection = 39
-        } else if (previousDirection == 37 && currentDirection == 39) { //was going left and decided to go right, still go left
+        } else if (previousDirection == 37 && currentDirection == 39) { //was going left and pressed right, still go left
             currentDirection = 37
-        } else if (previousDirection == 38 && currentDirection == 40) { //was going up and decided to go down, still go up
+        } else if (previousDirection == 38 && currentDirection == 40) { //was going up and pressed down, still go up
             currentDirection = 38
-        } else if (previousDirection == 40 && currentDirection == 38) { //was going down and decided to go up, still go down
+        } else if (previousDirection == 40 && currentDirection == 38) { //was going down and pressed up, still go down
             currentDirection = 40
         }
 
     }
 
 
-    // Starts with the initial position
-
-    //This is the latest position of the snake to be rendered
-    let renderArray = snakeArray.slice(-snakeLength)
-
-
-
     // This function determines which is the position to fill in next
     function updatePosition() {
 
         // These are the boundaries of the grid      
-        const x = pikaPosition % width // if the remainder of modulus is greater than zero then it's gone beyond the width
-        const y = Math.floor(pikaPosition / width) // if the 
+        const x = pikaPosition % width
+        const y = Math.floor(pikaPosition / width)
 
-
-        if (currentDirection == 39 && x < width - 1 && !renderArray.includes(pikaPosition + 1)) { // Going 
+        // Move the position if it conforms to the following conditions:
+        // 1) What is the direction it wants to go to next?
+        // 2) Is it within the grid boundaries?
+        // 3) Is that cell already taken by the snake (which is contained in renderArray)?
+        if (currentDirection == 39 && x < width - 1 && !renderArray.includes(pikaPosition + 1)) { // Go right
             pikaPosition++
-        } else if (currentDirection == 37 && x > 0 && !renderArray.includes(pikaPosition - 1)) { // Going left 
+        } else if (currentDirection == 37 && x > 0 && !renderArray.includes(pikaPosition - 1)) { // Go left 
             pikaPosition--
-        } else if (currentDirection == 38 && y > 0 && !renderArray.includes(pikaPosition - width)) { // Going up 
+        } else if (currentDirection == 38 && y > 0 && !renderArray.includes(pikaPosition - width)) { // Go up 
             pikaPosition -= width
-        } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(pikaPosition + width)) { // Going down 
+        } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(pikaPosition + width)) { // Go down 
             pikaPosition += width
-
-        } else {
-            gridWrapper.setAttribute('style', 'z-index: 1')
-            end.setAttribute('style', 'z-index: 30')
-            document.getElementById('end').play()
+        } else { // Otherwise, end the game
+            currentDirection = 0
+            gridWrapper.setAttribute('style', 'z-index: 1') // Hide the grid
+            end.setAttribute('style', 'z-index: 30') // Show the game over splash screen
+            document.getElementById('end').play() // Play the game over sound
             clearInterval(timerId)
-            setTimeout(window.location.reload(), 3000)
-
-            pikaPosition = -1
+            setTimeout(window.location.reload(), 3000) // Reload the page to start playing again
         }
 
     }
 
-
-
-
-    // When the snake eats a berry, increase its size
-    function eatBerries() {
-        if (pikaPosition == berryPosition) {
-            cells[berryPosition].classList.remove('berry')
-            snakeLength++ // Increase the snake length by 1
-            berriesEaten++
-            score.textContent = berriesEaten * 10
-            document.getElementById('eat').play()
-        }
-    }
-
-    // Prep for checkBerries
-    let numberOfBerries = 0
-    const add = (a, b) => a + b
-
-
-    // Every time, check whether there are any berries on the grid
-    function checkBerries() {
-
-        let berryCheck = []
-            // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
-        for (cell of cells) { // Check every single cell
-
-            // Append the TRUE/FALSE check as 1/0
-            berryCheck.push(cell.classList.contains('berry') * 1)
-
-        }
-
-        // Sum the array to find out if there are any berries
-        const numberOfBerries = berryCheck.reduce(add)
-
-        return numberOfBerries
-    }
-
-
-
-    // Based on the latest pika position, should update the snake array
+    // Then based on the latest position, update the array that renders the snake
     function updateSnake() {
 
-        // Every time pika moves, add that index to the snake array so that we keep the history of where it's been
-
+        // Every time the snake head moves, add that index to the snake array so that we keep the history of where it's been
         snakeArray.push(pikaPosition)
-            // But then only render the last X cells according to the supposed snake size
 
+        // But then only render the last X cells according to the latest snake size
         renderArray = snakeArray.slice(-snakeLength)
 
-
-
-
-
-
+        // Depending on what direction the snake is going, rotate the head accordingly in preparation for rendering
         let headAngle = 0
         switch (currentDirection) {
             case 37:
@@ -201,9 +149,7 @@ function init() {
                 break
         }
 
-
-
-        // Then we'll iterate through only those to render pika
+        // Then iterate for the cells that contain the snake in order to render them
         for (x of snakeArray) {
             if (renderArray.includes(x)) {
                 if (renderArray.indexOf(x) == renderArray.length - 1) {
@@ -226,6 +172,41 @@ function init() {
 
         }
     }
+
+
+    // When the snake eats a berry, increase its size
+    function eatBerries() {
+        if (pikaPosition == berryPosition) {
+            cells[berryPosition].classList.remove('berry') // Stop rendering the berry at that position
+            snakeLength++ // Increase the snake length by 1
+            berriesEaten++ // Increate the score by 1
+            score.textContent = berriesEaten * 10 // Update the score
+            document.getElementById('eat').play() // Play the eat berry sound
+        }
+    }
+
+
+    // The berries are dropped in randomly according to a timer, HOWEVER if a berry gets eaten within that interval, this will force 
+
+
+    // Every time, check whether there are any berries on the grid
+    function checkBerries() {
+
+        let berryCheck = []
+            // First check if there is any berry displayed at that point in time (i.e. in case it's been just eaten)
+        for (cell of cells) { // Check every single cell
+
+            // Append the TRUE/FALSE check as 1/0
+            berryCheck.push(cell.classList.contains('berry') * 1)
+
+        }
+
+        // Sum the array to find out if there are any berries
+        return berryCheck.reduce(add)
+    }
+
+
+
 
 
 
@@ -251,7 +232,7 @@ function init() {
 
     // Start the timer 
     const berryTimer = setInterval(() => {
-        if (numberOfBerries == 0 && currentDirection !== 0 && pikaPosition >= 0) { // If there's no berry displayed, start the timer 
+        if (checkBerries() == 0 && isPlaying == true) { // If there's no berry displayed, start the timer 
             // Go and drop a berry somewhere random
             cells[berryPosition].classList.remove('berry')
 
@@ -270,11 +251,10 @@ function init() {
 
 
     const timerId = setInterval(() => { // Start the timer
-        if (currentDirection !== 0 && pikaPosition >= 0) {
+        if (isPlaying == true) {
             updatePosition()
             eatBerries()
             updateSnake()
-            numberOfBerries = checkBerries()
             if (checkFree(renderArray).length == 0) {
                 alert('You WIN!!!')
             }
@@ -288,6 +268,7 @@ function init() {
     function startSplash(event) {
         // Upon starting the game, turn off the start splash screen
         start.setAttribute('style', 'z-index: 1')
+        isPlaying = true
     }
 
 
@@ -304,8 +285,3 @@ function init() {
 
 
 window.addEventListener('DOMContentLoaded', init)
-
-
-// Could think about getting the screen width/size and size the grid based on that to change the space the players would have to play with
-
-// For snake we need to use timers because that decides the speed of the snake i.e. at each passing second 'light up' another cell continuing in the same direction as the last key pressed

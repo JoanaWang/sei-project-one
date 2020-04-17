@@ -4,12 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 1</title>
+    <title>Project Snake</title>
     <link rel="stylesheet" href="styles/main.css">
     <script src="scripts/app.js" charset="utf-8"></script>
 </head>
 
 <body>
+
+    <!-- Start splash screen -->
+    <div class="start">
+        <div><img src="assets/snake-start.png" alt="snake-start"></div>
+        <div>Press any arrow to start</div>
+    </div>
+
+    <!-- Phone image -->
+    <div class="phone"></div>
+
+    <!-- Green background for edges -->
+    <div class="green"></div>
+
+    <!-- Header for score -->
+    <div class="header"></div>
+    <div id="score"></div>
+
+    <!-- Grid for game -->
+    <div class="grid-wrapper">
+        <div class="grid"></div>
+    </div>
+
+    <!-- End splash screen -->
+    <div class="game-over">
+        <div><img src="assets/game-over.png" alt="game-over"></div>
+        <div>Wait to start again</div>
+    </div>
+
+    <!-- Load audio elements but hide them -->
     <audio id="turn" controls style="display:none">
     <source src="assets/turn.m4a" type="audio/mpeg">
   </audio>
@@ -19,23 +48,6 @@
     <audio id="end" controls style="display:none">
     <source src="assets/end.mp3" type="audio/mpeg">
   </audio>
-
-
-    <div class="start">
-        <div><img src="assets/snake-start.png" alt="snake-start"></div>
-        <div>Press any arrow to start</div>
-    </div>
-    <div class="phone"></div>
-    <div class="green"></div>
-    <div class="header"></div>
-    <div id="score"></div>
-    <div class="grid-wrapper">
-        <div class="grid"></div>
-    </div>
-    <div class="game-over">
-        <div><img src="assets/game-over.png" alt="game-over"></div>
-        <div>Wait to start again</div>
-    </div>
 
 
 </body>
