@@ -8,7 +8,7 @@ function init() {
     const cells = []
     const score = document.querySelector('#score')
     const end = document.querySelector('.game-over')
-
+    const start = document.querySelector('.start')
 
     score.textContent = '00'
 
@@ -66,7 +66,11 @@ function init() {
     // Put initial berry on grid
     cells[berryPosition].classList.add('berry')
 
+
+
     function updateDirection(event) {
+
+
 
         // Update based on event
 
@@ -219,12 +223,6 @@ function init() {
 
 
 
-    // function moveSnake(event) {
-    //     previousDirection = currentDirection
-    //     currentDirection = event.keyCode
-    // }
-
-
     // Check which cells are free
     function checkFree(renderArray) {
         let freeArray = []
@@ -262,6 +260,8 @@ function init() {
     }, 500)
 
 
+
+
     const timerId = setInterval(() => { // Start the timer
         if (currentDirection !== 0 && pikaPosition >= 0) {
             updatePosition()
@@ -274,13 +274,23 @@ function init() {
 
         }
 
-    }, 200)
+    }, 150)
+
+
+
+    function startSplash(event) {
+        // Upon starting the game, turn off the start splash screen
+        start.setAttribute('style', 'z-index: 1')
+    }
+
+
 
 
     // * Event listeners
 
     // This is how we listen to the keyboard
     // Whenever there's a click, start the timer 
+    document.addEventListener('keydown', startSplash)
     document.addEventListener('keyup', updateDirection)
 
 }

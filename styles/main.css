@@ -6,7 +6,7 @@ body {
     height: 100%;
     width: 100%;
     margin: 0;
-    background-color: #140A00;
+    /* background-color: #140A00; */
 }
 
 .grid-wrapper {
@@ -15,10 +15,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: top;
-    /* background-image: url('../assets/3310.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center; */
     position: absolute;
     z-index: 10;
     top: 0px;
@@ -138,6 +134,25 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
     cursor: pointer;
+}
+
+.start {
+    height: 200px;
+    width: 300px;
+    position: absolute;
+    z-index: 19;
+    top: 560px;
+    left: 810px;
+    cursor: pointer;
+    font-family: myFont;
+    font-size: 50;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../assets/cell-green.png');
+    padding: 20px 20px 20px 20px;
 }
 
 .hide {
