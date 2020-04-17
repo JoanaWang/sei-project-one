@@ -27,6 +27,16 @@ function init() {
         return freeArray
     }
 
+    // Need a time delay for splash screens
+    function sleep(milliseconds) {
+        const date = Date.now()
+        let currentDate = null
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds)
+    }
+
+
     // * Grid variables
     const width = 20
     const height = 10
@@ -134,12 +144,16 @@ function init() {
         } else if (currentDirection == 40 && y < width - 1 && !renderArray.includes(pikaPosition + width)) { // Go down 
             pikaPosition += width
         } else { // Otherwise, end the game
+
             currentDirection = 0
+
             gridWrapper.setAttribute('style', 'z-index: 1') // Hide the grid
             end.setAttribute('style', 'z-index: 30') // Show the game over splash screen
+
             document.getElementById('end').play() // Play the game over sound
-            clearInterval(timerId)
-            setTimeout(window.location.reload(), 3000) // Reload the page to start playing again
+            sleep(3000)
+                // Reload the page to start playing again
+            window.location.reload()
         }
 
     }
@@ -244,16 +258,18 @@ function init() {
     }, 100)
 
     // Start the timer for the snake
+
     const timerId = setInterval(() => {
-        if (isPlaying == true) { // Once the user presses the first key
+        if (isPlaying == true && currentDirection != 0) { // Once the user presses the first key
             updatePosition() // Recalculate the snake's latest position
             eatBerries() // Check if it has eaten any berry
             updateSnake() // Update the snake based on eatBerries()
             if (checkFree(renderArray).length == 0) { // If there are no empty cells left then it means the player has reached the end of the game
-                alert('You WIN!!!')
+                alert('You\'ve spent way too much time playing this!!!')
             }
         }
     }, 150)
+
 
     // * Event listeners
 
