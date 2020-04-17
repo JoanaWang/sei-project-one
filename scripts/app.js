@@ -260,15 +260,15 @@ function init() {
     // Start the timer for the snake
 
     const timerId = setInterval(() => {
-        if (isPlaying == true && currentDirection != 0) { // Once the user presses the first key
-            updatePosition() // Recalculate the snake's latest position
-            eatBerries() // Check if it has eaten any berry
-            updateSnake() // Update the snake based on eatBerries()
-            if (checkFree(renderArray).length == 0) { // If there are no empty cells left then it means the player has reached the end of the game
-                alert('You\'ve spent way too much time playing this!!!')
+            if (isPlaying == true && currentDirection != 0) { // Once the user presses the first key
+                updatePosition() // Recalculate the snake's latest position
+                eatBerries() // Check if it has eaten any berry
+                updateSnake() // Update the snake based on eatBerries()
+                if (checkFree(renderArray).length == 0) { // If there are no empty cells left then it means the player has reached the end of the game
+                    alert('You\'ve spent way too much time playing this!!!')
+                }
             }
-        }
-    }, 150)
+        }, 150 - 10 * berriesEaten) // To increase the speed each time
 
 
     // * Event listeners
